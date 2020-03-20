@@ -1,0 +1,23 @@
+[
+    {
+        "id": 0,
+        "name": "Ani",
+        "surname": "Hakobian",
+        "age": 25,
+        "university": "ASUE"
+    }, 
+    {
+        "id": 1,
+        "name": "Garik",
+        "surname": "Adamyan",
+        "age": 22,
+        "university": "YSU"
+    }, 
+    {
+        "id": 2, 
+        "name": "Tigran", 
+        "surname": "Hovhannisyan", 
+        "age": 19, 
+        "university": "NPUA"
+    }
+]
