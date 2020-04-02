@@ -5,6 +5,3 @@ class User():
         self.user_name = name
         self.email = email
         self.songs = []
-    
-    def add_song(self, song_obj):
-        self.songs.append(song_obj)
