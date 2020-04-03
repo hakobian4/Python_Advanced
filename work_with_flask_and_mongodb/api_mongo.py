@@ -1,6 +1,8 @@
 from flask import request, jsonify, Flask
 from flask_pymongo import PyMongo
 from music_player import Player
+from user import User
+from song import Song
 
 app = Flask(__name__)
 app.config["DEBUG"] = True
@@ -12,11 +14,7 @@ player = Player(mongo)
 @app.route('/api/v1/playlist', methods = ['GET'])
 def get_all():
 
-    playlist = mongo.db.user.find()
-    result = []
-
-    for info in playlist:
-        result.append({'user_name' : info['user_name'], 'email' : info['email'], 'playlist' : info['playlist']})
+    result = player.get_player()
 
     return jsonify({'result' : result})
 
@@ -25,7 +23,10 @@ def get_all():
 def add_user():
 
     response = request.get_json()
-    message = player.add_user(response['user_name'], response['email'])
+    user_name = response['user_name']
+    email = response['email']
+    user_obj = User(user_name, email)
+    message = player.add_user(user_obj)
 
     return message
 
@@ -36,27 +37,34 @@ def add_song():
     if len(response['email']) == 0 or len(response['name']) == 0 or len(response['singer']) == 0 or len(response['url']) == 0:
         message = "Your parameters are incompleted. Please enter all valid parameters."
     else:
-        message = player.add_song(response['email'], response['singer'], response['name'], response['url'])
+        email = response['email']
+        singer = response['singer']
+        url =response['url']
+        song_name = response['name']
+        song_object = Song(song_name, singer, url)
+        message = player.add_song(email, song_object)
 
     return message
 
 
-@app.route('/api/v1/playlist/remove/song', methods = ['DELETE'])
+@app.route('/api/v1/playlist/remove/song', methods = ['PUT', 'DELETE'])
 def remove_song():
 
     response = request.get_json()
     if len(response['email']) == 0 or len(response['url']) == 0:
         message = "Your parameters are incompleted. Please enter all valid parameters."
     else:
-        message = player.remove_song(response['email'], response['url'])
+        email = response['email']
+        url =response['url']
+        message = player.remove_song(email, url)
 
     return message
 
 
-@app.route('/api/v1/playlist/remove/user/<name>', methods = ['DELETE'])
-def remove_user(name):
+@app.route('/api/v1/playlist/remove/user/<email>', methods = ['DELETE'])
+def remove_user(email):
     
-    message = player.remove_user(name)
+    message = player.remove_user(email)
     
     return message
 
